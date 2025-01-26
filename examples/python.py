@@ -66,9 +66,9 @@ class TestClass:
 # NOTE: Remember this
 # Should these fold together?
 
-# No space after hash
-# These are valid too
-# Should fold despite style
+#No space after hash
+#These are valid too
+#Should fold despite style
 
 # Comments with varying content length
 # This is a really long comment that extends beyond the usual length of a line and might even wrap depending on your editor settings
