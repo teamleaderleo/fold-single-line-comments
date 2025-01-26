@@ -24,10 +24,10 @@ def example():
 
 
 # Comments with different indentation
-# Some extra space before this one
-# And even more here
-# Back to normal
-# Should these fold together or separate?
+#   Some extra space before this one
+#       And even more here
+#       Back to normal
+#           Should these fold together or separate?
 
 
 def another_example():
