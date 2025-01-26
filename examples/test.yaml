@@ -1,0 +1,9 @@
+# test.yaml
+# Config files everywhere
+# Modern cloud/DevOps
+name: workflow
+# Job section
+# Comments here
+jobs:
+  build:
+    runs-on: ubuntu-latest
