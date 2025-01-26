@@ -2,6 +2,9 @@
 // These should fold
 // Like this block
 
+// TODO: Decide about these comments
+// Should they fold?
+
 function example() {
     // Indented comments
     // Should also fold
