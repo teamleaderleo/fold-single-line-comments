@@ -2,15 +2,11 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "watch",
+            "label": "compile",
             "type": "shell",
             "command": "pnpm",
-            "args": ["watch"],
-            "problemMatcher": "$tsc-watch",
-            "isBackground": true,
-            "presentation": {
-                "reveal": "never"
-            },
+            "args": ["compile"],
+            "problemMatcher": ["$tsc"],
             "group": {
                 "kind": "build",
                 "isDefault": true
