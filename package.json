@@ -3,12 +3,28 @@
   "displayName": "Fold Single-Line Comments",
   "description": "Fold consecutive single-line comments in Python, Ruby, Shell scripts, and YAML files",
   "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/teamleaderleo/fold-single-line-comments"
+  },
+  "keywords": [
+    "comments",
+    "folding",
+    "python",
+    "ruby",
+    "shell",
+    "yaml",
+    "code folding",
+    "single-line comments"
+  ],
+  "categories": [
+    "Other",
+    "Formatters"
+  ],
   "engines": {
     "vscode": "^1.86.0"
   },
-  "categories": [
-    "Other"
-  ],
+  "license": "MIT",
   "activationEvents": [
     "onLanguage:python",
     "onLanguage:ruby",
