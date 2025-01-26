@@ -7,6 +7,7 @@
     "type": "git",
     "url": "https://github.com/teamleaderleo/fold-single-line-comments"
   },
+  "icon": "icon.png",
   "keywords": [
     "comments",
     "folding",
