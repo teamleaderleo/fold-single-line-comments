@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-class PythonCommentFoldingRangeProvider implements vscode.FoldingRangeProvider {
+class CommentFoldingRangeProvider implements vscode.FoldingRangeProvider {
     provideFoldingRanges(
         document: vscode.TextDocument,
         context: vscode.FoldingContext,
@@ -45,14 +45,18 @@ class PythonCommentFoldingRangeProvider implements vscode.FoldingRangeProvider {
 }
 
 export function activate(context: vscode.ExtensionContext) {
-    // Register the folding range provider
-    const provider = new PythonCommentFoldingRangeProvider();
-    context.subscriptions.push(
-        vscode.languages.registerFoldingRangeProvider(
-            { language: 'python' },
-            provider
-        )
-    );
+    // Register the folding range provider for all supported languages
+    const provider = new CommentFoldingRangeProvider();
+    const languages = ['python', 'ruby', 'shellscript', 'yaml'];
+    
+    languages.forEach(language => {
+        context.subscriptions.push(
+            vscode.languages.registerFoldingRangeProvider(
+                { language },
+                provider
+            )
+        );
+    });
 
     // Register the command
     let disposable = vscode.commands.registerCommand('fold-single-line-comments.fold', () => {
