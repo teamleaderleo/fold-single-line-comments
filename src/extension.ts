@@ -1,94 +1,86 @@
 import * as vscode from 'vscode';
 
-export function activate(context: vscode.ExtensionContext) {
-    // Register the folding range provider for all languages
-    const provider = new CommentFoldingRangeProvider();
-    const disposable = vscode.languages.registerFoldingRangeProvider({ scheme: 'file' }, provider);
-    
-    // Register the command
-    const commandDisposable = vscode.commands.registerCommand('fold-single-line-comments.fold', () => {
-        const editor = vscode.window.activeTextEditor;
-        if (!editor) {
-            return;
-        }
-
-        // Get folding ranges
-        const ranges = provider.provideFoldingRanges(editor.document);
-        
-        // Fold all the ranges
-        if (ranges && ranges.length > 0) {
-            editor.selections = [new vscode.Selection(0, 0, 0, 0)]; // Reset selection
-            vscode.commands.executeCommand('editor.fold', {
-                selectionLines: ranges.map(range => range.start)
-            });
-        }
-    });
-
-    context.subscriptions.push(disposable, commandDisposable);
-}
-
-class CommentFoldingRangeProvider implements vscode.FoldingRangeProvider {
-    private getLanguageCommentSymbol(languageId: string): string {
-        // Common single-line comment symbols by language
-        const commentSymbols: { [key: string]: string } = {
-            'typescript': '//',
-            'javascript': '//',
-            'python': '#',
-            'ruby': '#',
-            'powershell': '#',
-            'shellscript': '#',
-            'rust': '//',
-            'cpp': '//',
-            'c': '//',
-            'csharp': '//',
-            'java': '//',
-            'go': '//',
-            'php': '//',
-            'swift': '//',
-        };
-
-        return commentSymbols[languageId] || '//';
-    }
-
+class PythonCommentFoldingRangeProvider implements vscode.FoldingRangeProvider {
     provideFoldingRanges(
-        document: vscode.TextDocument
+        document: vscode.TextDocument,
+        context: vscode.FoldingContext,
+        token: vscode.CancellationToken
     ): vscode.FoldingRange[] {
         const ranges: vscode.FoldingRange[] = [];
         let startLine: number | null = null;
-        let commentSymbol = this.getLanguageCommentSymbol(document.languageId);
+        let lastLine: number | null = null;
 
-        for (let lineNum = 0; lineNum < document.lineCount; lineNum++) {
-            const line = document.lineAt(lineNum);
+        for (let i = 0; i < document.lineCount; i++) {
+            const line = document.lineAt(i);
             const trimmedText = line.text.trim();
 
-            if (trimmedText.startsWith(commentSymbol)) {
+            if (trimmedText.startsWith('#')) {
                 if (startLine === null) {
-                    startLine = lineNum;
+                    startLine = i;
                 }
-            } else if (startLine !== null) {
-                // Only create a folding range if we have at least 2 consecutive comment lines
-                if (lineNum - startLine > 1) {
+                lastLine = i;
+            } else if (startLine !== null && lastLine !== null) {
+                if (lastLine > startLine) {
                     ranges.push(new vscode.FoldingRange(
-                        startLine,
-                        lineNum - 1,
+                        startLine, 
+                        lastLine,
                         vscode.FoldingRangeKind.Comment
                     ));
                 }
                 startLine = null;
+                lastLine = null;
             }
         }
 
-        // Handle case where file ends with comments
-        if (startLine !== null && document.lineCount - startLine > 1) {
+        if (startLine !== null && lastLine !== null && lastLine > startLine) {
             ranges.push(new vscode.FoldingRange(
-                startLine,
-                document.lineCount - 1,
+                startLine, 
+                lastLine,
                 vscode.FoldingRangeKind.Comment
             ));
         }
 
         return ranges;
     }
+}
+
+export function activate(context: vscode.ExtensionContext) {
+    // Register the folding range provider
+    const provider = new PythonCommentFoldingRangeProvider();
+    context.subscriptions.push(
+        vscode.languages.registerFoldingRangeProvider(
+            { language: 'python' },
+            provider
+        )
+    );
+
+    // Register the command
+    let disposable = vscode.commands.registerCommand('fold-single-line-comments.fold', () => {
+        const editor = vscode.window.activeTextEditor;
+        if (!editor) {
+            return;
+        }
+
+        // Get the ranges
+        const ranges = provider.provideFoldingRanges(
+            editor.document,
+            {} as vscode.FoldingContext,
+            {} as vscode.CancellationToken
+        );
+
+        // Fold all the ranges
+        if (ranges.length > 0) {
+            editor.setDecorations // Fold each range
+            vscode.commands.executeCommand('editor.fold', {
+                selectionLines: ranges.map(range => range.start)
+            });
+            vscode.window.showInformationMessage(`Folded ${ranges.length} comment blocks`);
+        } else {
+            vscode.window.showInformationMessage('No comment blocks found to fold');
+        }
+    });
+
+    context.subscriptions.push(disposable);
 }
 
 export function deactivate() {}
