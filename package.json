@@ -1,7 +1,7 @@
 {
   "name": "fold-single-line-comments",
   "displayName": "Fold Single-Line Comments",
-  "description": "Fold consecutive single-line comments in your code",
+  "description": "Fold consecutive single-line comments in Python, Ruby, Shell scripts, and YAML files",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.86.0"
@@ -10,7 +10,10 @@
     "Other"
   ],
   "activationEvents": [
-    "onLanguage:python"
+    "onLanguage:python",
+    "onLanguage:ruby",
+    "onLanguage:shellscript",
+    "onLanguage:yaml"
   ],
   "main": "./dist/extension.js",
   "contributes": {
