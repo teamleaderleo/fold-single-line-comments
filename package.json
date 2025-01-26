@@ -1,5 +1,6 @@
 {
   "name": "fold-single-line-comments",
+  "publisher": "teamleaderleo",
   "displayName": "Fold Single-Line Comments",
   "description": "Fold consecutive single-line comments in Python, Ruby, Shell scripts, and YAML files",
   "version": "0.0.1",
