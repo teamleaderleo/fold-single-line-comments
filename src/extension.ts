@@ -2,9 +2,7 @@ import * as vscode from 'vscode';
 
 class CommentFoldingRangeProvider implements vscode.FoldingRangeProvider {
     provideFoldingRanges(
-        document: vscode.TextDocument,
-        context: vscode.FoldingContext,
-        token: vscode.CancellationToken
+        document: vscode.TextDocument
     ): vscode.FoldingRange[] {
         const ranges: vscode.FoldingRange[] = [];
         let startLine: number | null = null;
@@ -59,22 +57,17 @@ export function activate(context: vscode.ExtensionContext) {
     });
 
     // Register the command
-    let disposable = vscode.commands.registerCommand('fold-single-line-comments.fold', () => {
+    const disposable = vscode.commands.registerCommand('fold-single-line-comments.fold', () => {
         const editor = vscode.window.activeTextEditor;
         if (!editor) {
             return;
         }
 
         // Get the ranges
-        const ranges = provider.provideFoldingRanges(
-            editor.document,
-            {} as vscode.FoldingContext,
-            {} as vscode.CancellationToken
-        );
+        const ranges = provider.provideFoldingRanges(editor.document);
 
         // Fold all the ranges
         if (ranges.length > 0) {
-            editor.setDecorations // Fold each range
             vscode.commands.executeCommand('editor.fold', {
                 selectionLines: ranges.map(range => range.start)
             });
